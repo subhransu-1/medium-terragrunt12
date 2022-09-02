@@ -1,0 +1,33 @@
+version: 2.1
+
+jobs:
+  run-terragrunt:
+    docker:
+      - image: cimg/base:2022.03
+    steps:
+      - checkout
+      - run:
+          name: Install and set Linuxbrew
+          command: |
+            sudo apt-get install build-essential curl file git;
+            sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)";
+            echo 'export PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin/:$PATH"' >> $BASH_ENV;
+            echo 'export MANPATH="/home/linuxbrew/.linuxbrew/share/man:$MANPATH"' >> $BASH_ENV;
+            echo 'export INFOPATH="/home/linuxbrew/.linuxbrew/share/info:$INFOPATH"' >> $BASH_ENV;
+            source $BASH_ENV;
+      - run:
+          name: Install Terragrunt
+          command: |
+            brew doctor;
+            brew install terraform;
+            brew install terragrunt;
+            source $BASH_ENV;
+            terragrunt -version;
+      - run:
+          name: Terragrunt Validate
+          command: terragrunt run-all validate
+workflows:
+  build:
+    jobs:
+      - run-terragrunt:
+          name: Run Terragrunt
