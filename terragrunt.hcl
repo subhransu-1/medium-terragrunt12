@@ -3,8 +3,7 @@ remote_state {
   config = {
     bucket  = "medium-terragrunt-example1"
     key     = "terragrunted/${path_relative_to_include()}.tfstate"
-    region  = "us-east-1"
-    encrypt = true
+    encrypt = false
   }
 }
 
